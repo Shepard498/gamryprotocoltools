@@ -121,22 +121,14 @@ function R = pipeline_ocp(folder, opts)
   Sheets{end+1} = {'Summary', S_hdr, S_rows};
 
   % ---------- export workbook ----------
-  R = struct('default_filename', opts.export_filename, 'sheets', {Sheets});
-  if opts.do_export
-    progress('Exporting workbook...', 0.92, opts);
-    export_workbook(R, opts.export_filename, opts.progress_cb);
-  end
+  svg_jobs = {
+    struct('handle', hVt, 'filename', fullfile(opts.svg_dir, sprintf('OCP_V_vs_t_%s.svg', stamp)), ...
+           'args', {{'Width', 1600, 'Height', 1000}}), ...
+    struct('handle', hDrift, 'filename', fullfile(opts.svg_dir, sprintf('OCP_dVdt_%s.svg', stamp)), ...
+           'args', {{'Width', 1600, 'Height', 1000}})
+  };
 
-  % ---------- export SVGs ----------
-  if opts.save_svg
-    try
-      if ~exist(opts.svg_dir,'dir'), mkdir(opts.svg_dir); end
-      export_svg_scaled(hVt,    fullfile(opts.svg_dir, sprintf('OCP_V_vs_t_%s.svg', stamp)), 'Width', 1600, 'Height', 1000);
-      export_svg_scaled(hDrift, fullfile(opts.svg_dir, sprintf('OCP_dVdt_%s.svg',   stamp)), 'Width', 1600, 'Height', 1000);
-    catch ME
-      warning('SVG export failed: %s', ME.message);
-    end
-  end
+  R = finalize_pipeline_outputs(Sheets, opts, stamp, svg_jobs, 0.92);
 
   progress('Done', 1.00, opts);
 end
@@ -230,19 +222,5 @@ function [t,V,I] = import_gamry_ocp_from_table(filepath, imp)
   bad = ~(isfinite(t) & isfinite(V));
   if any(bad), t(bad) = []; V(bad) = []; if size(D,2)>=5, I(bad)=[]; end; end
   if isempty(t), error('No valid numeric OCP samples in %s', filepath); end
-end
-
-function progress(msg, frac, opts)
-  try
-    if nargin < 2, frac = []; end
-    if isfield(opts,'progress_cb') && ~isempty(opts.progress_cb)
-      opts.progress_cb(msg, frac);
-    else
-      if isempty(frac), fprintf('[OCP] %s\n', msg);
-      else, fprintf('[OCP] %s  (%.0f%%)\n', msg, 100*max(0,min(1,frac)));
-      end
-    end
-  catch
-  end
 end
 

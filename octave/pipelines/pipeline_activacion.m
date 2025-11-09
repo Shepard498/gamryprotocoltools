@@ -320,35 +320,25 @@ function R = pipeline_activacion(folder, opts)
     hold off;
   end
 
-  % ---------- export LAST (optional) ----------
-  R = struct('default_filename', opts.export_filename, 'sheets', {Sheets});
-  if isfield(opts,'do_export') && opts.do_export
-    progress('Exporting workbook...', 0.92, opts);
-    export_workbook(R, opts.export_filename, opts.progress_cb);
+  % ---------- shared export tail ----------
+  svg_jobs = {
+    struct('handle', hVt, 'filename', fullfile(opts.svg_dir, sprintf('Activacion_V_vs_t_%s.svg', stamp))), ...
+    struct('handle', hIt, 'filename', fullfile(opts.svg_dir, sprintf('Activacion_I_vs_t_%s.svg', stamp)))
+  };
+  if ~isempty(hAsc)
+    svg_jobs{end+1} = struct('handle', hAsc, 'filename', fullfile(opts.svg_dir, sprintf('Activacion_Overlays_Asc_%s.svg', stamp)));
+  end
+  if ~isempty(hDsc)
+    svg_jobs{end+1} = struct('handle', hDsc, 'filename', fullfile(opts.svg_dir, sprintf('Activacion_Overlays_Dsc_%s.svg', stamp)));
+  end
+  if ~isempty(hAscS)
+    svg_jobs{end+1} = struct('handle', hAscS, 'filename', fullfile(opts.svg_dir, sprintf('Activacion_Summary_Asc_%s.svg', stamp)));
+  end
+  if ~isempty(hDscS)
+    svg_jobs{end+1} = struct('handle', hDscS, 'filename', fullfile(opts.svg_dir, sprintf('Activacion_Summary_Dsc_%s.svg', stamp)));
   end
 
-  % ---------- SVG export ----------
-  if opts.save_svg
-    try
-      if ~exist(opts.svg_dir,'dir'), mkdir(opts.svg_dir); end
-      export_svg_scaled(hVt,  fullfile(opts.svg_dir, sprintf('Activacion_V_vs_t_%s.svg', stamp)));
-      export_svg_scaled(hIt,  fullfile(opts.svg_dir, sprintf('Activacion_I_vs_t_%s.svg', stamp)));
-      if ~isempty(hAsc) && ishandle(hAsc)
-        export_svg_scaled(hAsc, fullfile(opts.svg_dir, sprintf('Activacion_Overlays_Asc_%s.svg', stamp)));
-      end
-      if ~isempty(hDsc) && ishandle(hDsc)
-        export_svg_scaled(hDsc, fullfile(opts.svg_dir, sprintf('Activacion_Overlays_Dsc_%s.svg', stamp)));
-      end
-      if ~isempty(hAscS) && ishandle(hAscS)
-        export_svg_scaled(hAscS, fullfile(opts.svg_dir, sprintf('Activacion_Summary_Asc_%s.svg', stamp)));
-      end
-      if ~isempty(hDscS) && ishandle(hDscS)
-        export_svg_scaled(hDscS, fullfile(opts.svg_dir, sprintf('Activacion_Summary_Dsc_%s.svg', stamp)));
-      end
-    catch ME
-      warning('SVG export failed: %s', ME.message);
-    end
-  end
+  R = finalize_pipeline_outputs(Sheets, opts, stamp, svg_jobs, 0.92);
 
   progress('Done', 1.00, opts);
 end

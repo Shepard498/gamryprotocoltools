@@ -428,49 +428,31 @@ Dsc_alpha = []; Dsc_alpha_names = {};
   if ~isempty(legZd), legend(legZd); end
 
   % ---------- export ----------
-  R = struct('default_filename', opts.export_filename, 'sheets', {Sheets});
-  if isfield(opts,'do_export') && opts.do_export
-    progress('Exporting workbook...', 0.94, opts);
-    export_workbook(R, opts.export_filename, opts.progress_cb);
+  svg_jobs = {};
+  if exist('hVI','var')
+    svg_jobs{end+1} = struct('handle', hVI, 'filename', fullfile(opts.svg_dir, sprintf('POL_V_vs_I_full_%s.svg', stamp)), ...
+                             'exporter', @export_svg_safe, 'args', {{'Width', 1600, 'Height', 1000}});
+  end
+  if exist('hIVlast','var')
+    svg_jobs{end+1} = struct('handle', hIVlast, 'filename', fullfile(opts.svg_dir, sprintf('POL_IV_last_%s.svg', stamp)), ...
+                             'exporter', @export_svg_safe, 'args', {{'Width', 1600, 'Height', 1000}});
+  end
+  if exist('hAscDual','var')
+    svg_jobs{end+1} = struct('handle', hAscDual, 'filename', fullfile(opts.svg_dir, sprintf('POL_Asc_VI_vs_t_%s.svg', stamp)), ...
+                             'exporter', @export_svg_safe, 'args', {{'Width', 1600, 'Height', 1000}});
+  end
+  if exist('hDscDual','var')
+    svg_jobs{end+1} = struct('handle', hDscDual, 'filename', fullfile(opts.svg_dir, sprintf('POL_Dsc_VI_vs_t_%s.svg', stamp)), ...
+                             'exporter', @export_svg_safe, 'args', {{'Width', 1600, 'Height', 1000}});
+  end
+  if exist('hZdiff','var')
+    svg_jobs{end+1} = struct('handle', hZdiff, 'filename', fullfile(opts.svg_dir, sprintf('POL_Zdiff_%s.svg', stamp)), ...
+                             'exporter', @export_svg_safe, 'args', {{'Width', 1600, 'Height', 1000}});
   end
 
-  % ---------- SVG export ----------
-  if isfield(opts,'save_svg') && opts.save_svg
-    try
-      if ~exist(opts.svg_dir,'dir'), mkdir(opts.svg_dir); end
-      % Set painters to reduce gl2ps issues and use safe exporter with fallback
-      if exist('hVI','var'),      export_svg_safe(hVI,     fullfile(opts.svg_dir, sprintf('POL_V_vs_I_full_%s.svg', stamp)), 'Width', 1600, 'Height', 1000); end
-      if exist('hIVlast','var'),  export_svg_safe(hIVlast, fullfile(opts.svg_dir, sprintf('POL_IV_last_%s.svg', stamp)),     'Width', 1600, 'Height', 1000); end
-      if exist('hAscDual','var'), export_svg_safe(hAscDual, fullfile(opts.svg_dir, sprintf('POL_Asc_VI_vs_t_%s.svg', stamp)), 'Width', 1600, 'Height', 1000); end
-      if exist('hDscDual','var'), export_svg_safe(hDscDual, fullfile(opts.svg_dir, sprintf('POL_Dsc_VI_vs_t_%s.svg', stamp)), 'Width', 1600, 'Height', 1000); end
-      if exist('hZdiff','var'),   export_svg_safe(hZdiff,  fullfile(opts.svg_dir, sprintf('POL_Zdiff_%s.svg', stamp)),        'Width', 1600, 'Height', 1000); end
-    catch ME
-      warning('SVG export failed: %s', ME.message);
-    end
-  end
+  R = finalize_pipeline_outputs(Sheets, opts, stamp, svg_jobs, 0.94);
 
   progress('Done', 1.00, opts);
-end
-
-function export_svg_safe(fig, outfn, varargin)
-  % Robust SVG export: try painters; on failure, temporarily switch to gnuplot.
-  try
-    if ishghandle(fig)
-      try, set(fig, 'renderer', 'painters'); catch, end
-      drawnow();
-    end
-    export_svg_scaled(fig, outfn, varargin{:});
-  catch
-    try
-      oldtk = graphics_toolkit();
-      graphics_toolkit('gnuplot');
-      drawnow();
-      export_svg_scaled(fig, outfn, varargin{:});
-      graphics_toolkit(oldtk);
-    catch ME
-      warning('SVG export failed (safe): %s', ME.message);
-    end
-  end
 end
 
 function y = smooth_ma(y, w)

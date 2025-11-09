@@ -321,48 +321,43 @@ function R = pipeline_eis(folder, opts)
   Sheets = [ { {'Meta_EIS', MetaHdr, MetaRows} }, Sheets ];
   Sheets{end+1} = {'Summary', SumHdr, SumRows};
 
-  R = struct('default_filename', opts.export_filename, 'sheets', {Sheets});
-  if opts.do_export
-    progress('Exporting workbook...', 0.92, opts);
-    export_workbook(R, opts.export_filename, opts.progress_cb);
+  svg_jobs = {
+    struct('handle', hNyq, 'filename', fullfile(opts.svg_dir, sprintf('EIS_Nyquist_%s.svg', stamp)), ...
+           'args', {{'Width', 1600, 'Height', 1000}}), ...
+    struct('handle', hBodeMag, 'filename', fullfile(opts.svg_dir, sprintf('EIS_BodeMag_%s.svg', stamp)), ...
+           'args', {{'Width', 1600, 'Height', 1000}}), ...
+    struct('handle', hBodePh, 'filename', fullfile(opts.svg_dir, sprintf('EIS_BodePh_%s.svg', stamp)), ...
+           'args', {{'Width', 1600, 'Height', 1000}})
+  };
+  svg_jobs{end+1} = struct('handle', hIdcIdx, 'filename', fullfile(opts.svg_dir, sprintf('EIS_Idc_vs_index_%s.svg', stamp)), ...
+                           'args', {{'Width', 1600, 'Height', 1000}}, 'when', ~isempty(idcidx_handles));
+  if exist('hEst','var')
+    svg_jobs{end+1} = struct('handle', hEst, 'filename', fullfile(opts.svg_dir, sprintf('EIS_Stabilizations_Vdc_vs_t_%s.svg', stamp)), ...
+                             'args', {{'Width', 1600, 'Height', 1000}}, 'when', ~isempty(EST));
   end
-
-  % ---------- SVG export ----------
-  if opts.save_svg
-    try
-      if ~exist(opts.svg_dir,'dir'), mkdir(opts.svg_dir); end
-      % Existing exports (unchanged names/sizes)
-      export_svg_scaled(hNyq,     fullfile(opts.svg_dir, sprintf('EIS_Nyquist_%s.svg', stamp)), 'Width', 1600, 'Height', 1000);
-      export_svg_scaled(hBodeMag, fullfile(opts.svg_dir, sprintf('EIS_BodeMag_%s.svg', stamp)), 'Width', 1600, 'Height', 1000);
-      export_svg_scaled(hBodePh,  fullfile(opts.svg_dir, sprintf('EIS_BodePh_%s.svg',  stamp)), 'Width', 1600, 'Height', 1000);
-      if ~isempty(idcidx_handles)
-        export_svg_scaled(hIdcIdx, fullfile(opts.svg_dir, sprintf('EIS_Idc_vs_index_%s.svg', stamp)), 'Width', 1600, 'Height', 1000);
+  if exist('hGrp','var')
+    svg_jobs{end+1} = struct('handle', hGrp, 'filename', fullfile(opts.svg_dir, sprintf('EIS_Nyquist_grouped_%s.svg', stamp)), ...
+                             'args', {{'Width', 1600, 'Height', 1000}});
+  end
+  if exist('hRs','var')
+    svg_jobs{end+1} = struct('handle', hRs, 'filename', fullfile(opts.svg_dir, sprintf('EIS_Rs_vs_current_%s.svg', stamp)), ...
+                             'args', {{'Width', 1600, 'Height', 1000}});
+  end
+  if exist('hRs0','var')
+    svg_jobs{end+1} = struct('handle', hRs0, 'filename', fullfile(opts.svg_dir, sprintf('EIS_Rs_0V_%s.svg', stamp)), ...
+                             'args', {{'Width', 1600, 'Height', 1000}});
+  end
+  if ~isempty(PerNyqFigs)
+    for i=1:numel(PerNyqFigs)
+      if ishandle(PerNyqFigs(i))
+        svg_jobs{end+1} = struct('handle', PerNyqFigs(i), ...
+          'filename', fullfile(opts.svg_dir, sprintf('EIS_Nyquist_%s_%s.svg', PerNyqNames{i}, stamp)), ...
+          'args', {{'Width', 1200, 'Height', 1200}});
       end
-      if ~isempty(EST)
-        export_svg_scaled(hEst, fullfile(opts.svg_dir, sprintf('EIS_Stabilizations_Vdc_vs_t_%s.svg', stamp)), 'Width', 1600, 'Height', 1000);
-      end
-      if exist('hGrp','var') && ~isempty(hGrp) && ishandle(hGrp)
-        export_svg_scaled(hGrp, fullfile(opts.svg_dir, sprintf('EIS_Nyquist_grouped_%s.svg', stamp)), 'Width', 1600, 'Height', 1000);
-      end
-      if exist('hRs','var') && ~isempty(hRs) && ishandle(hRs)
-        export_svg_scaled(hRs, fullfile(opts.svg_dir, sprintf('EIS_Rs_vs_current_%s.svg', stamp)), 'Width', 1600, 'Height', 1000);
-      end
-      if exist('hRs0','var') && ~isempty(hRs0) && ishandle(hRs0)
-        export_svg_scaled(hRs0, fullfile(opts.svg_dir, sprintf('EIS_Rs_0V_%s.svg', stamp)), 'Width', 1600, 'Height', 1000);
-      end
-      % NEW: per-file Nyquist SVGs (square canvas for clarity)
-      if ~isempty(PerNyqFigs)
-        for i=1:numel(PerNyqFigs)
-          if ishandle(PerNyqFigs(i))
-            outfn = fullfile(opts.svg_dir, sprintf('EIS_Nyquist_%s_%s.svg', PerNyqNames{i}, stamp));
-            export_svg_scaled(PerNyqFigs(i), outfn, 'Width', 1200, 'Height', 1200);
-          end
-        end
-      end
-    catch ME
-      warning('SVG export failed: %s', ME.message);
     end
   end
+
+  R = finalize_pipeline_outputs(Sheets, opts, stamp, svg_jobs, 0.92);
 
   progress('Done', 1.00, opts);
 end
@@ -600,19 +595,5 @@ end
 
 function idx = argmin(v)
   [~,idx] = min(v);
-end
-
-function progress(msg, frac, opts)
-  try
-    if nargin < 2, frac = []; end
-    if isfield(opts,'progress_cb') && ~isempty(opts.progress_cb)
-      opts.progress_cb(msg, frac);
-    else
-      if isempty(frac), fprintf('[EIS] %s\n', msg);
-      else, fprintf('[EIS] %s  (%.0f%%)\n', msg, 100*max(0,min(1,frac)));
-      end
-    end
-  catch
-  end
 end
 
