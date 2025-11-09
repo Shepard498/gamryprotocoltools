@@ -1,0 +1,29 @@
+# OS & IDE
+.DS_Store
+Thumbs.db
+*.code-workspace
+.vscode/
+.idea/
+
+# Python helpers (if any)
+.venv/
+__pycache__/
+
+# Octave / MATLAB
+*.asv
+*.mex*
+*.mexa64
+*.mexw64
+
+# Data & outputs
+data/interim/**
+data/processed/**
+plots/**
+!data/**/.gitkeep
+!plots/.gitkeep
+
+# Archives
+*.zip
+*.7z
+*.tar
+*.tar.gz

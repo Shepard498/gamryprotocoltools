@@ -1,0 +1,5 @@
+# Track large binaries (if you enable Git LFS locally)
+# Install once:   git lfs install
+# Then:           git lfs track "data/raw/**"
+# Below is a common default for data directories:
+data/raw/** filter=lfs diff=lfs merge=lfs -text
