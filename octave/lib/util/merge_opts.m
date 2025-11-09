@@ -1,13 +1,8 @@
-function out = merge_opts(defaults, opts)
-%MERGE_OPTS  Shallow-merge struct fields of opts into defaults.
-%   out = MERGE_OPTS(defaults, opts)
-% If a field exists in opts, it overwrites defaults. Non-destructive.
-  if nargin < 2 || isempty(opts)
-    out = defaults; return;
-  end
-  out = defaults;
-  f = fieldnames(opts);
-  for k = 1:numel(f)
-    out.(f{k}) = opts.(f{k});
+function out = merge_opts(def, opt)
+  if nargin < 2 || isempty(opt), out = def; return; end
+  out = def;
+  k = fieldnames(opt);
+  for i = 1:numel(k)
+    out.(k{i}) = opt.(k{i});
   end
 end

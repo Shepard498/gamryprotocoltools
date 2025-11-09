@@ -1,13 +1,8 @@
 function T = parse_dta_table(filepath, key)
-  % PARSE_DTA_TABLE Generic text parser for Gamry .DTA tables.
-  % key: 'CURVE' (chrono/polarization), 'ZCURVE' (EIS), etc.
-  % Returns struct with fields = lowercase normalized column names.
   fid = fopen(filepath, 'rt');
   if fid < 0, error('Cannot open %s', filepath); end
   cleaner = onCleanup(@() fclose(fid));
 
-
-  % Find the header line that starts with key
   headerline = '';
   while true
     ln = fgetl(fid);
@@ -18,8 +13,6 @@ function T = parse_dta_table(filepath, key)
   end
   if isempty(headerline), error('Key %s not found in %s', key, filepath); end
 
-
-  % The next non-empty line is assumed to be column headers
   hdr = '';
   while true
     ln = fgetl(fid);
@@ -30,35 +23,22 @@ function T = parse_dta_table(filepath, key)
   end
   if isempty(hdr), error('No column header after %s in %s', key, filepath); end
 
+  headers = regexp(strtrim(hdr), '[\t,;\s]+', 'split');
 
-  % Split headers by common delimiters
-  delims = {"\t", ",", ";", "\s+"};
-  for d = 1:numel(delims)
-    h = regexp(hdr, delims{d}, 'split');
-    if numel(h) > 1, delim = delims{d}; headers = h; break; end
-  end
-  if ~exist('headers','var'), headers = {hdr}; delim = "\s+"; end
-
-
-  % Read numeric block until a blank or non-numeric line appears
   data = [];
   while true
     pos = ftell(fid);
     ln = fgetl(fid);
-    if ~ischar(ln) || isempty(strtrim(ln))
-      break;
-    end
-    nums = regexp(strtrim(ln), delim, 'split');
-    vals = str2double(nums);
+    if ~ischar(ln) || isempty(strtrim(ln)), break; end
+    toks = regexp(strtrim(ln), '[\t,;\s]+', 'split');
+    vals = str2num_locale(toks);
     if any(isnan(vals))
       fseek(fid, pos, 'bof');
-    break;
+      break;
     end
     data(end+1,1:numel(vals)) = vals; %#ok<AGROW>
   end
 
-
-  % Build struct with normalized field names
   headers = lower(strtrim(headers));
   headers = regexprep(headers, '[^a-z0-9_]+', '_');
   T = struct();
@@ -67,3 +47,4 @@ function T = parse_dta_table(filepath, key)
     T.(headers{j}) = col;
   end
 end
+
