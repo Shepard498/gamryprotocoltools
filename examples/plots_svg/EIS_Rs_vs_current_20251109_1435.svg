@@ -1,0 +1,81 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<svg height="1000pt" viewBox="0 0 1600 1000" width="1600pt" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+ <title>Figure 15: Rs vs current (bar)</title>
+ <desc>
+Creator: GL2PS 1.4.2, (C) 1999-2020 C. Geuzaine
+For: Octave
+CreationDate: Sun Nov  9 14:35:32 2025
+</desc>
+ <defs/>
+ <polygon fill="#ffffff" points="0,0 1600,0 1600,1000 0,1000"/>
+ <g>
+  <polygon fill="#ffffff" points="0,1000 1600,1000 1600,0 0,0" shape-rendering="crispEdges"/>
+  <clipPath id="cp0016001000">
+   <polygon points="0,1000 1600,1000 1600,0 0,0"/>
+  </clipPath>
+  <g clip-path="url(#cp0016001000)">
+   <polygon fill="#ffffff" points="208,890 1448,890 1448,75 208,75" shape-rendering="crispEdges"/>
+   <g font-family="'Noto Sans'" font-size="44.7379" font-style="normal" font-weight="normal" transform="translate(-63.8354,482.5) rotate(-90,143.5,0)" xml:space="preserve">
+    <text fill="rgb(38,38,38)" x="0 28 47 69 81 97 116 151 193 218 246 271 " y="-13">R_s (\Omega)</text>
+   </g>
+   <g font-family="'Noto Sans'" font-size="44.7379" font-style="normal" font-weight="normal" transform="translate(449,65) rotate(-0,379,0)" xml:space="preserve">
+    <text fill="rgb(0,0,0)" x="0 33 45 73 101 116 131 150 175 203 231 256 284 306 329 341 353 381 397 422 441 463 488 516 532 544 567 589 601 623 651 670 689 714 742 " y="-11">High-frequency intercept vs current</text>
+   </g>
+   <polygon fill="#0071bc" points="580,890 580,108.423 249.333,108.423 249.333,890" shape-rendering="crispEdges"/>
+   <polygon fill="#0071bc" points="993.333,890 993.333,86.415 662.667,86.415 662.667,890" shape-rendering="crispEdges"/>
+   <polygon fill="#0071bc" points="1406.67,890 1406.67,97.0439 1076,97.0439 1076,890" shape-rendering="crispEdges"/>
+   <polyline fill="none" points="580,108.423 249.333,108.423 249.333,890 580,890 580,108.423" stroke="#000000" stroke-linecap="butt" stroke-linejoin="miter" stroke-width="0.7"/>
+   <polyline fill="none" points="993.333,86.415 662.667,86.415 662.667,890 993.333,890 993.333,86.415" stroke="#000000" stroke-linecap="butt" stroke-linejoin="miter" stroke-width="0.7"/>
+   <polyline fill="none" points="1406.67,97.0439 1076,97.0439 1076,890 1406.67,890 1406.67,97.0439" stroke="#000000" stroke-linecap="butt" stroke-linejoin="miter" stroke-width="0.7"/>
+   <polyline fill="none" points="414.667,890 414.667,877.6" stroke="#262626" stroke-linecap="butt" stroke-linejoin="miter" stroke-width="0.7"/>
+   <polyline fill="none" points="414.667,75 414.667,87.3999" stroke="#262626" stroke-linecap="butt" stroke-linejoin="miter" stroke-width="0.7"/>
+   <polyline fill="none" points="828,890 828,877.6" stroke="#262626" stroke-linecap="butt" stroke-linejoin="miter" stroke-width="0.7"/>
+   <polyline fill="none" points="828,75 828,87.3999" stroke="#262626" stroke-linecap="butt" stroke-linejoin="miter" stroke-width="0.7"/>
+   <polyline fill="none" points="1241.33,890 1241.33,877.6" stroke="#262626" stroke-linecap="butt" stroke-linejoin="miter" stroke-width="0.7"/>
+   <polyline fill="none" points="1241.33,75 1241.33,87.3999" stroke="#262626" stroke-linecap="butt" stroke-linejoin="miter" stroke-width="0.7"/>
+   <g font-family="'Noto Sans'" font-size="40.6709" font-style="normal" font-weight="normal" transform="translate(367.667,951.503) rotate(-0,47,-31)" xml:space="preserve">
+    <text fill="rgb(38,38,38)" x="0 23 34 57 68 " y="-1">1.5 A</text>
+   </g>
+   <g font-family="'Noto Sans'" font-size="40.6709" font-style="normal" font-weight="normal" transform="translate(798,951.503) rotate(-0,30,-31)" xml:space="preserve">
+    <text fill="rgb(38,38,38)" x="0 23 34 " y="-1">9 A</text>
+   </g>
+   <g font-family="'Noto Sans'" font-size="40.6709" font-style="normal" font-weight="normal" transform="translate(1199.83,951.503) rotate(-0,41.5,-31)" xml:space="preserve">
+    <text fill="rgb(38,38,38)" x="0 23 46 57 " y="-1">18 A</text>
+   </g>
+   <polyline fill="none" points="208,890 220.4,890" stroke="#262626" stroke-linecap="butt" stroke-linejoin="miter" stroke-width="0.7"/>
+   <polyline fill="none" points="1448,890 1435.6,890" stroke="#262626" stroke-linecap="butt" stroke-linejoin="miter" stroke-width="0.7"/>
+   <polyline fill="none" points="208,727 220.4,727" stroke="#262626" stroke-linecap="butt" stroke-linejoin="miter" stroke-width="0.7"/>
+   <polyline fill="none" points="1448,727 1435.6,727" stroke="#262626" stroke-linecap="butt" stroke-linejoin="miter" stroke-width="0.7"/>
+   <polyline fill="none" points="208,564 220.4,564" stroke="#262626" stroke-linecap="butt" stroke-linejoin="miter" stroke-width="0.7"/>
+   <polyline fill="none" points="1448,564 1435.6,564" stroke="#262626" stroke-linecap="butt" stroke-linejoin="miter" stroke-width="0.7"/>
+   <polyline fill="none" points="208,401 220.4,401" stroke="#262626" stroke-linecap="butt" stroke-linejoin="miter" stroke-width="0.7"/>
+   <polyline fill="none" points="1448,401 1435.6,401" stroke="#262626" stroke-linecap="butt" stroke-linejoin="miter" stroke-width="0.7"/>
+   <polyline fill="none" points="208,238 220.4,238" stroke="#262626" stroke-linecap="butt" stroke-linejoin="miter" stroke-width="0.7"/>
+   <polyline fill="none" points="1448,238 1435.6,238" stroke="#262626" stroke-linecap="butt" stroke-linejoin="miter" stroke-width="0.7"/>
+   <polyline fill="none" points="208,75 220.4,75" stroke="#262626" stroke-linecap="butt" stroke-linejoin="miter" stroke-width="0.7"/>
+   <polyline fill="none" points="1448,75 1435.6,75" stroke="#262626" stroke-linecap="butt" stroke-linejoin="miter" stroke-width="0.7"/>
+   <g font-family="'Noto Sans'" font-size="40.6709" font-style="normal" font-weight="normal" transform="translate(164.665,905.5) rotate(-0,23,-15.5)" xml:space="preserve">
+    <text fill="rgb(38,38,38)" x="0 " y="-1">0</text>
+   </g>
+   <g font-family="'Noto Sans'" font-size="40.6709" font-style="normal" font-weight="normal" transform="translate(84.6646,742.5) rotate(-0,103,-15.5)" xml:space="preserve">
+    <text fill="rgb(38,38,38)" x="0 23 34 57 80 " y="-1">0.002</text>
+   </g>
+   <g font-family="'Noto Sans'" font-size="40.6709" font-style="normal" font-weight="normal" transform="translate(84.6646,579.5) rotate(-0,103,-15.5)" xml:space="preserve">
+    <text fill="rgb(38,38,38)" x="0 23 34 57 80 " y="-1">0.004</text>
+   </g>
+   <g font-family="'Noto Sans'" font-size="40.6709" font-style="normal" font-weight="normal" transform="translate(84.6646,416.5) rotate(-0,103,-15.5)" xml:space="preserve">
+    <text fill="rgb(38,38,38)" x="0 23 34 57 80 " y="-1">0.006</text>
+   </g>
+   <g font-family="'Noto Sans'" font-size="40.6709" font-style="normal" font-weight="normal" transform="translate(84.6646,253.5) rotate(-0,103,-15.5)" xml:space="preserve">
+    <text fill="rgb(38,38,38)" x="0 23 34 57 80 " y="-1">0.008</text>
+   </g>
+   <g font-family="'Noto Sans'" font-size="40.6709" font-style="normal" font-weight="normal" transform="translate(107.665,90.5) rotate(-0,80,-15.5)" xml:space="preserve">
+    <text fill="rgb(38,38,38)" x="0 23 34 57 " y="-1">0.01</text>
+   </g>
+   <polyline fill="none" points="208,890 1448,890" stroke="#262626" stroke-dasharray="16,0" stroke-linecap="square" stroke-linejoin="miter" stroke-width="0.7"/>
+   <polyline fill="none" points="208,75 1448,75" stroke="#262626" stroke-dasharray="16,0" stroke-linecap="square" stroke-linejoin="miter" stroke-width="0.7"/>
+   <polyline fill="none" points="208,890 208,75" stroke="#262626" stroke-dasharray="16,0" stroke-linecap="square" stroke-linejoin="miter" stroke-width="0.7"/>
+   <polyline fill="none" points="1448,890 1448,75" stroke="#262626" stroke-dasharray="16,0" stroke-linecap="square" stroke-linejoin="miter" stroke-width="0.7"/>
+  </g>
+ </g>
+</svg>
