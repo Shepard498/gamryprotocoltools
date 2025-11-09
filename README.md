@@ -1,6 +1,6 @@
 # Octave Gamry Pipelines
 
-Turnkey structure to parse Gamry `.DTA` files, run processing pipelines (EIS, activation, polarization), and export plots and spreadsheets.
+Turnkey structure to parse Gamry `.DTA` files, run processing pipelines (EIS, activation, polarization and OCP), and export plots and spreadsheets.
 
 ## Quick start
 ```bash
