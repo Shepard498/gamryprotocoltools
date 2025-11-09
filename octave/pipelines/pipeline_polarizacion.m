@@ -119,7 +119,7 @@ Dsc_alpha = []; Dsc_alpha_names = {};
     n = numel(I);
     if n < 4, k_split = max(1, floor(n/2)); notes = 'short'; return; end
     w = max(1, min(31, round(medwin)));
-    Is = movmedian_oct(I, w);
+    Is = smooth_signal(I, w, 'median');
     dI = diff(Is);
     guard = max(1, round(edge_guard_frac*n));
     lo = 1+guard; hi = n-1-guard;   % diff has length n-1, pick index in [lo, hi]

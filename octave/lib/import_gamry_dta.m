@@ -10,25 +10,24 @@ function [t, V, I] = import_gamry_dta(fp, opts)
                            'min_numeric_cols',  5,  ...
                            'decimal_comma_to_dot', true), opts);
 
-  fid = fopen(fp, 'r', 'n');
-  if fid < 0, error('No se pudo abrir: %s', fp); end
-
-  raw = {};
-  while ~feof(fid)
-    ln = fgetl(fid);
-    if ~ischar(ln), break; end
-    if opts.decimal_comma_to_dot
-      ln = strrep(ln, ',', '.');
-    end
-    raw{end+1} = ln; %#ok<AGROW>
-  endwhile
-  fclose(fid);
-
-  data = [];
-  for kk = 1:numel(raw)
-    nums = sscanf(raw{kk}, '%f');
+  % Read entire file at once and normalize decimals
+  try
+    content = fileread(fp);
+  catch
+    error('No se pudo abrir: %s', fp);
+  end
+  
+  if opts.decimal_comma_to_dot
+    content = normalize_decimals(content);
+  end
+  
+  % Split into lines and parse numeric data
+  lines = regexp(content, '\r\n|\n|\r', 'split');
+  data = zeros(0, opts.min_numeric_cols);
+  
+  for ln = lines'
+    nums = sscanf(ln{1}, '%f');
     if numel(nums) >= opts.min_numeric_cols
-      if isempty(data), data = zeros(0, opts.min_numeric_cols); end
       data(end+1,1:opts.min_numeric_cols) = nums(1:opts.min_numeric_cols)'; %#ok<AGROW>
     end
   end
